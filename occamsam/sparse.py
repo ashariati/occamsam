@@ -26,7 +26,7 @@ class DBSRMatrix(object):
 
     def append_row(self, cols, blocks):
 
-        if isinstance(cols, (int, np.integer)):
+        if isinstance(cols, (int, np.int_)):
             cols = np.array([cols])
             blocks = np.array([blocks])
         elif isinstance(cols, list):
@@ -136,8 +136,8 @@ class DBSRMatrix(object):
         self._indices = indices.tolist()
 
     def copy_col(self, src, dest):
-        assert isinstance(dest, (int, np.int)), "Expected integer for dest, got %s" % type(dest)
-        assert isinstance(src, (int, np.int)), "Expected integer for src, got %s" % type(src)
+        assert isinstance(dest, (int, int)), "Expected integer for dest, got %s" % type(dest)
+        assert isinstance(src, (int, int)), "Expected integer for src, got %s" % type(src)
 
         if src == dest:
             return

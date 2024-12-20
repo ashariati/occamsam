@@ -42,7 +42,7 @@ class Simulation(object):
         landmark_positions = np.zeros((self.num_landmarks, self.landmark_dim))
         landmark_labels = -np.ones(self.num_landmarks)
         landmark_orientation = np.zeros((self.num_landmarks, self.landmark_dim, self.point_dim))
-        unique_index_map = -np.ones(self.num_landmarks, dtype=np.int)
+        unique_index_map = -np.ones(self.num_landmarks, dtype=int)
         for i, group in enumerate(equivalence_groups):
             g_list = list(group)
             landmark_positions[g_list, :] = self.unique_landmark_positions[i, :]
@@ -64,7 +64,7 @@ class Simulation(object):
 
         observation_points, observation_landmarks = list(zip(*observation_pairs))
         landmark_order = list(OrderedDict.fromkeys(observation_landmarks))
-        reindexing_map = -np.ones(self.num_landmarks, dtype=np.int)
+        reindexing_map = -np.ones(self.num_landmarks, dtype=int)
         reindexing_map[landmark_order] = np.arange(self.num_landmarks)
         assert np.all(reindexing_map > -1), "Unset index in reindexing_map"
         self.landmark_positions = landmark_positions[landmark_order, :]
@@ -134,7 +134,7 @@ class Simulation(object):
             self.landmark_variables[i].position = self.landmark_positions[i, :]
         return self
 
-    def factors(self, point_range=None, max_observations=np.Inf):
+    def factors(self, point_range=None, max_observations=np.inf):
 
         odometry_factors = [OdometryFactor(self.point_variables[u], self.point_variables[v], R, t, sigma)
                             for (u, v), R, t, sigma in zip(*self.odometry_measurements())]

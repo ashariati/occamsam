@@ -42,7 +42,7 @@ class LeastSquares(object):
         :param verbosity: Prints solver output to console if True
         """
 
-        assert isinstance(graph, GaussianFactorGraph), "Expected type GaussainFactorGraph for graph, got %s" % type(graph)
+        assert isinstance(graph, GaussianFactorGraph), "Expected type GaussianFactorGraph for graph, got %s" % type(graph)
         self.graph = graph
 
         self.M = []  # estimated landmark positions
@@ -76,7 +76,7 @@ class LeastSquares(object):
 
             M = cp.Variable((landmark_dim, num_landmarks))
             P = cp.Variable((point_dim, num_points))
-            objective = cp.Minimize(sum_squares(Am * vec(M) + Ap * vec(P) - d) + sum_squares(Bp * vec(P) - t))
+            objective = cp.Minimize(sum_squares(Am @ vec(M) + Ap @ vec(P) - d) + sum_squares(Bp @ vec(P) - t))
 
             problem = cp.Problem(objective)
             problem.solve(verbose=self._verbosity, solver=self._solver)
@@ -139,7 +139,7 @@ class WeightedLeastSquares(object):
         :param verbosity: Prints solver output to console if True
         """
 
-        assert isinstance(graph, GaussianFactorGraph), "Expected type GaussainFactorGraph for graph, got %s" % type(graph)
+        assert isinstance(graph, GaussianFactorGraph), "Expected type GaussianFactorGraph for graph, got %s" % type(graph)
         self.graph = graph
 
         self.M = None  # estimated landmark positions
@@ -176,7 +176,7 @@ class WeightedLeastSquares(object):
             M = cp.Variable((landmark_dim, num_landmarks))
             P = cp.Variable((point_dim, num_points))
             objective = cp.Minimize(
-                sum_squares(S_d * ((Am * vec(M)) + (Ap * vec(P)) - d)) + sum_squares(S_t * ((Bp * vec(P)) - t)))
+                sum_squares(S_d @ ((Am @ vec(M)) + (Ap @ vec(P)) - d)) + sum_squares(S_t @ ((Bp @ vec(P)) - t)))
             problem = cp.Problem(objective)
             problem.solve(verbose=self._verbosity, solver=self._solver)
 
@@ -193,7 +193,7 @@ class WeightedLeastSquares(object):
 
             P = cp.Variable((point_dim, num_points))
             objective = cp.Minimize(
-                sum_squares(sum_squares(S_t * ((Bp * vec(P)) - t))))
+                sum_squares(sum_squares(S_t @ ((Bp @ vec(P)) - t))))
             problem = cp.Problem(objective)
             problem.solve(verbose=self._verbosity, solver=self._solver)
 
@@ -239,7 +239,7 @@ class Occam(object):
         :param verbosity: Prints solver output to console if True
         """
 
-        assert isinstance(graph, GaussianFactorGraph), "Expected type GaussainFactorGraph for graph, got %s" % type(graph)
+        assert isinstance(graph, GaussianFactorGraph), "Expected type GaussianFactorGraph for graph, got %s" % type(graph)
         self.graph = graph
 
         self.M = None  # estimated landmark positions
@@ -301,9 +301,9 @@ class Occam(object):
         M.value = self._pre_optimizer.M
         P.value = self._pre_optimizer.P
 
-        objective = cp.Minimize(mixed_norm(W * E * M.T))
-        constraints = [norm((Am * vec(M)) + (Ap * vec(P)) - d) <= 2 * np.linalg.norm(sigma_d + 1e-6),
-                       norm((Bp * vec(P)) - t) <= 2 * np.linalg.norm(sigma_t + 1e-6)]
+        objective = cp.Minimize(mixed_norm(W @ E @ M.T))
+        constraints = [norm((Am @ vec(M)) + (Ap @ vec(P)) - d) <= 2 * np.linalg.norm(sigma_d + 1e-6),
+                       norm((Bp @ vec(P)) - t) <= 2 * np.linalg.norm(sigma_t + 1e-6)]
         problem = cp.Problem(objective, constraints)
         problem.solve(verbose=self._verbosity, solver=self._solver, warm_start=True)
 
@@ -315,10 +315,10 @@ class Occam(object):
             self.equivalence_pairs = []
             return
 
-        E_ = E[np.abs(np.linalg.norm(E * M.value.T, axis=1)) < 0.001, :]
+        E_ = E[np.abs(np.linalg.norm(E @ M.value.T, axis=1)) < 0.001, :]
         objective = cp.Minimize(
-            sum_squares(S_d * ((Am * vec(M)) + (Ap * vec(P)) - d)) + sum_squares(S_t * ((Bp * vec(P)) - t)))
-        constraints = [E_ * M.T == 0] if E_.shape[0] > 0 else []
+            sum_squares(S_d @ ((Am @ vec(M)) + (Ap @ vec(P)) - d)) + sum_squares(S_t @ ((Bp @ vec(P)) - t)))
+        constraints = [E_ @ M.T == 0] if E_.shape[0] > 0 else []
         problem = cp.Problem(objective, constraints)
         problem.solve(verbose=self._verbosity, solver=self._solver, warm_start=True)
 
@@ -355,7 +355,7 @@ class EM(object):
 
     def __init__(self, graph, assoc_range=1, solver=None, verbosity=False):
 
-        assert isinstance(graph, GaussianFactorGraph), "Expected type GaussainFactorGraph for graph, got %s" % type(graph)
+        assert isinstance(graph, GaussianFactorGraph), "Expected type GaussianFactorGraph for graph, got %s" % type(graph)
         self.graph = graph
 
         self.M = None  # estimated landmark positions
@@ -393,8 +393,8 @@ class EM(object):
         Am, Ap, d, sigma_d = self.graph.observation_system()
         sigma_d = _sanitized_noise_array(sigma_d)
 
-        W = np.Inf
-        W_ = -np.Inf
+        W = np.inf
+        W_ = -np.inf
         while np.linalg.norm(W - W_) > 1e-3:
 
             # print(np.linalg.norm(W - W_))

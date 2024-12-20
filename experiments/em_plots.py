@@ -11,7 +11,7 @@ if __name__ == '__main__':
     # time vs number of measurements
     occam_time = np.mean(occam_data[:, :, 1], axis=1)
     em_time = np.mean(em_data[:, :, 1], axis=1)
-    xticks = 1 + np.arange(len(occam_time)).astype(np.int)
+    xticks = 1 + np.arange(len(occam_time)).astype(int)
     plt.plot(xticks, occam_time)
     plt.plot(xticks, em_time)
     plt.xticks(xticks)

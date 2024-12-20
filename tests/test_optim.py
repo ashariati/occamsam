@@ -441,9 +441,7 @@ class TestOccam(unittest.TestCase):
         observation_noise = 0.01
         odometry_noise = 0.02
 
-        # sim = new_simulation(point_dim=3, landmark_dim=1, seed=11, observation_noise=observation_noise,
-        #                      odometry_noise=odometry_noise, noise_matrix='diag')
-        sim = new_simulation(point_dim=3, landmark_dim=1, seed=17, observation_noise=observation_noise,
+        sim = new_simulation(point_dim=3, landmark_dim=1, seed=18, observation_noise=observation_noise,
                              odometry_noise=odometry_noise, noise_matrix='diag')
         fg = factorgraph.GaussianFactorGraph()
         for f in sim.factors():
@@ -494,7 +492,7 @@ class TestOccam(unittest.TestCase):
         num_partitions = 100
         # partition_indptr = np.sort(
         #     np.concatenate([[0], np.random.choice(sim.num_points, num_partitions - 1), [sim.num_points]]))
-        partition_indptr = np.linspace(0, num_points, num_partitions + 1, dtype=np.int)
+        partition_indptr = np.linspace(0, num_points, num_partitions + 1, dtype=int)
 
         fpw = int(np.max(partition_indptr[1:] - partition_indptr[:-1]) + 5)
         fg = factorgraph.GaussianFactorGraph(free_point_window=fpw)
@@ -539,7 +537,7 @@ class TestOccam(unittest.TestCase):
         num_partitions = 100
         # partition_indptr = np.sort(
         #     np.concatenate([[0], np.random.choice(sim.num_points, num_partitions - 1), [sim.num_points]]))
-        partition_indptr = np.linspace(0, num_points, num_partitions + 1, dtype=np.int)
+        partition_indptr = np.linspace(0, num_points, num_partitions + 1, dtype=int)
 
         fpw = int(np.max(partition_indptr[1:] - partition_indptr[:-1]) + 5)
         fg = factorgraph.GaussianFactorGraph(free_point_window=fpw)

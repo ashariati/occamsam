@@ -81,7 +81,7 @@ opt.update()
 
 ## Dependencies
 
-Python 2 and 3 compatible.
+Python 3 Required
 
 Required Packages:
 - NumPy
@@ -89,7 +89,7 @@ Required Packages:
 - CvxPy
 
 Optional Packages:
-- Gurobi
+- Gurobi (Recommended)
 - Mosek
 - CvxOpt
 

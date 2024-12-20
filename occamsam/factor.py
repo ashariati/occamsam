@@ -29,7 +29,7 @@ class LinearFactor(object):
 
     def __init__(self, head, tail, A1, A2, b, sigma):
         """
-        Initializes a linear Gaussain factor between two variables, modeled as follows
+        Initializes a linear Gaussian factor between two variables, modeled as follows
             exp^(|| A1 * x1 - A2 * x2 - b ||^2)
 
         :param head: Head Variable corresponding to x1

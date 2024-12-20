@@ -462,7 +462,7 @@ class TestObservationSystem(unittest.TestCase):
         fg = factorgraph.GaussianFactorGraph(free_point_window=num_free_points)
 
         num_partitions = 10
-        partition_indptr = np.linspace(0, 100, num_partitions + 1, dtype=np.int)
+        partition_indptr = np.linspace(0, 100, num_partitions + 1, dtype=int)
 
         sim_landmarks = sim.landmark_variables
         for i in range(num_partitions):
@@ -785,7 +785,7 @@ class TestOdometrySystem(unittest.TestCase):
         fg = factorgraph.GaussianFactorGraph(free_point_window=num_free_points)
 
         num_partitions = 10
-        partition_indptr = np.linspace(0, 100, num_partitions + 1, dtype=np.int)
+        partition_indptr = np.linspace(0, 100, num_partitions + 1, dtype=int)
 
         for i in range(num_partitions):
 
@@ -908,7 +908,7 @@ class TestMerge(unittest.TestCase):
         landmarks = sim.landmark_variables
 
         num_partitions = 10
-        partition_indptr = np.linspace(0, num_points, num_partitions + 1, dtype=np.int)
+        partition_indptr = np.linspace(0, num_points, num_partitions + 1, dtype=int)
 
         for i in range(num_partitions):
 
